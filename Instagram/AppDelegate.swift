@@ -1,12 +1,5 @@
-//
-//  AppDelegate.swift
-//  Instagram
-//
-//  Created by 河本泰知 on 2017/06/09.
-//  Copyright © 2017年 taichi.komoto. All rights reserved.
-//
-
 import UIKit
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +9,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        FIRApp.configure()
         return true
     }
 
