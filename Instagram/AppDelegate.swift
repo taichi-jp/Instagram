@@ -8,8 +8,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
         FIRApp.configure()
+        
+        AdobeUXAuthManager.shared().setAuthenticationParametersWithClientID("4f783431f8214b1c9cb943354beef38e", withClientSecret: "855cc052-4bda-49d3-9103-74dba3b47ff3")
+        
         return true
     }
 
