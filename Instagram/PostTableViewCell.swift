@@ -7,6 +7,8 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var likeLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var sendButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,7 +22,14 @@ class PostTableViewCell: UITableViewCell {
     func setPostData(postData: PostData) {
         self.postImageView.image = postData.image
         
-        self.captionLabel.text = "\(postData.name!) : \(postData.caption!)"
+        //文章（キャプション + コメント）
+        var text = "\(postData.name!) : \(postData.caption!)\n\n"
+        for comment in postData.comments {
+            text = text + "\(comment["name"]!): \(comment["text"]!)\n"
+        }
+        self.captionLabel.text = text
+        
+        //いいね
         let likeNumber = postData.likes.count
         likeLabel.text = "\(likeNumber)"
         

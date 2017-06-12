@@ -105,7 +105,11 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         cell.setPostData(postData: postArray[indexPath.row])
         
         // セル内のボタンのアクションをソースコードで設定する
-        cell.likeButton.addTarget(self, action:#selector(handleButton(sender:event:)), for:  UIControlEvents.touchUpInside)
+        cell.likeButton.addTarget(self, action:#selector(handleLikeButton(sender:event:)), for:  UIControlEvents.touchUpInside)
+        cell.sendButton.addTarget(self, action:#selector(handleSendButton(sender:event:)), for:  UIControlEvents.touchUpInside)
+        
+        cell.textField.tag = indexPath.row
+        cell.sendButton.tag = indexPath.row
         
         return cell
     }
@@ -121,7 +125,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     // セル内のボタンがタップされた時に呼ばれるメソッド
-    func handleButton(sender: UIButton, event:UIEvent) {
+    func handleLikeButton(sender: UIButton, event:UIEvent) {
         print("DEBUG_PRINT: likeボタンがタップされました。")
         
         // タップされたセルのインデックスを求める
@@ -155,5 +159,31 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             postRef.updateChildValues(likes)
             
         }
+    }
+    
+    func handleSendButton(sender: UIButton, event:UIEvent) {
+        print("DEBUG_PRINT: 送信ボタンがタップされました。")
+        
+        // タップされたセルのインデックスを求める
+        let touch = event.allTouches?.first
+        let point = touch!.location(in: self.tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+        
+        // 配列からタップされたインデックスのデータを取り出す
+        let postData = postArray[indexPath!.row]
+        let cell = tableView.cellForRow(at: indexPath!) as! PostTableViewCell
+        let text = cell.textField.text
+//        let time = NSDate.timeIntervalSinceReferenceDate
+        if let uname = FIRAuth.auth()?.currentUser?.displayName {
+            if text != "" {
+                let comment: [String:String] = ["name": uname, "text": text!]
+                postData.comments.append(comment)
+                let postRef = FIRDatabase.database().reference().child(Const.PostPath).child(postData.id!)
+                let comments = ["comments": postData.comments]
+                postRef.updateChildValues(comments)
+                cell.textField.text = ""
+            }
+        }
+        
     }
 }

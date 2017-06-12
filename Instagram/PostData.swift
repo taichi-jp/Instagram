@@ -13,6 +13,7 @@ class PostData: NSObject {
     var likes: [String] = []
     //自分がいいねしているかどうか
     var isLiked: Bool = false
+    var comments: [[String:String]] = []
     
     //データの追加や更新
     init(snapshot: FIRDataSnapshot, myId: String) {
@@ -32,16 +33,22 @@ class PostData: NSObject {
         let time = valueDictionary["time"] as? String
         self.date = NSDate(timeIntervalSinceReferenceDate: TimeInterval(time!)!)
         
-        //likesというキーで取り出したString型の配列の中にユーザ自身のIDが入っているかで値をtureかfalseのどちらかで設定
+        
         if let likes = valueDictionary["likes"] as? [String] {
             self.likes = likes
         }
         
+        //likesというキーで取り出したString型の配列の中にユーザ自身のIDが入っているかで値をtureかfalseのどちらかで設定
         for likeId in self.likes {
             if likeId == myId {
                 self.isLiked = true
                 break
             }
         }
+        
+        if let comments: [[String:String]] = valueDictionary["comments"] as? [[String:String]] {
+            self.comments = comments
+        }
+        
     }
 }
